@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:woman_safety/utils/quetos.dart';
-import 'package:woman_safety/widgets/safeweb_view.dart';
+import 'package:woman_safety/widgets/home_widgets/safeweb_view.dart';
 
 class Customcarouel extends StatelessWidget {
   const Customcarouel({super.key});
