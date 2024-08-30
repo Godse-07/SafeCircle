@@ -5,6 +5,7 @@ import 'package:woman_safety/utils/quetos.dart';
 import 'package:woman_safety/widgets/home_widgets/Emergency_card.dart';
 import 'package:woman_safety/widgets/home_widgets/customCarouel.dart';
 import 'package:woman_safety/widgets/home_widgets/custom_appbar.dart';
+import 'package:woman_safety/widgets/home_widgets/live_safe.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -46,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Customcarouel(),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 10, bottom: 10),
                     child: Text(
                       "Emergency",
                       style: TextStyle(
@@ -56,6 +58,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   EmergencyCard(),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                    child: Text(
+                      "Explore LiveSafe",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  LiveSafe(),
                 ],
               ),
             ),
