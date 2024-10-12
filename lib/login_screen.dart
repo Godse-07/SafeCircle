@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:woman_safety/components/custom_textfield.dart';
 import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
+import 'package:woman_safety/registed_parent.dart';
 import 'package:woman_safety/register_child.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -141,13 +142,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 SecondaryButton(
-                    title: "Create new account",
+                    title: "Create new account as a child",
                     onPress: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return RegisterChild();
                       }));
-                    })
+                    }),
+                SizedBox(
+                  height: 20,
+                ),
+                SecondaryButton(
+                    title: "Create new account as a Parent",
+                    onPress: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return ParentLoginScreen();
+                      }));
+                    }),
+                SizedBox(
+                  height: 20,
+                )
               ],
             ),
           ),

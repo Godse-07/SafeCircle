@@ -4,12 +4,15 @@ import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
 import 'package:woman_safety/login_screen.dart';
 
-class RegisterChild extends StatefulWidget {
+class ParentLoginScreen extends StatefulWidget {
+  const ParentLoginScreen({super.key});
+
   @override
-  State<RegisterChild> createState() => _RegisterChildState();
+  State<ParentLoginScreen> createState() => _ParentLoginScreenState();
 }
 
-class _RegisterChildState extends State<RegisterChild> {
+class _ParentLoginScreenState extends State<ParentLoginScreen> {
+  @override
   bool isPasswordShown = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -21,9 +24,9 @@ class _RegisterChildState extends State<RegisterChild> {
     print(_formData);
   }
 
-  @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
+        body: SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -32,7 +35,7 @@ class _RegisterChildState extends State<RegisterChild> {
                 padding: EdgeInsets.only(top: 15),
                 child: Center(
                   child: Text(
-                    "Register as a child",
+                    "Register as a parent",
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
@@ -110,18 +113,18 @@ class _RegisterChildState extends State<RegisterChild> {
                         height: 20,
                       ),
                       CustomTextfield(
-                        hintText: "Enter gurdian's email",
+                        hintText: "Enter children's email",
                         prefix: Icon(Icons.email_rounded),
-                        validate: (gemail) {
-                          if (gemail!.isEmpty) {
-                            return "gurdian's email is required";
+                        validate: (cemail) {
+                          if (cemail!.isEmpty) {
+                            return "children's email is required";
                           }
                           return null;
                         },
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
-                        onsave: (gemail) {
-                          _formData['gemail'] = gemail ?? "";
+                        onsave: (cemail) {
+                          _formData['cemail'] = cemail ?? "";
                         },
                       ),
                       SizedBox(
@@ -215,6 +218,6 @@ class _RegisterChildState extends State<RegisterChild> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
