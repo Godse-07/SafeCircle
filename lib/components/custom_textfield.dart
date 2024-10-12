@@ -10,7 +10,7 @@ class CustomTextfield extends StatelessWidget {
 
   String? Function(String?)? validate;
 
-  String? Function(String?)? onsave;
+  Function(String?)? onsave;
 
   final int? maxLines;
 
