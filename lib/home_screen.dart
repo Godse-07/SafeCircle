@@ -35,11 +35,29 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Container(
+              margin: EdgeInsets.only(bottom: 20, left: 10, top: 10, right: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFFFD8080),
+                    Color(0xFFFB8580),
+                    Color(0xFFFBD079),
+                  ],
+                ),
+              ),
               width: double.infinity,
               padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
-              child: CustomAppbar(
-                onTap: getRandomQuote,
-                qIndex: index,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+                  child: CustomAppbar(
+                    onTap: getRandomQuote,
+                    qIndex: index,
+                  ),
+                ),
               ),
             ),
             Expanded(

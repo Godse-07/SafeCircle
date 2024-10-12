@@ -18,6 +18,7 @@ class CustomAppbar extends StatelessWidget {
           quotes[qIndex!],
           style: TextStyle(
             fontSize: 15,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
