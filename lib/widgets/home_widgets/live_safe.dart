@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:woman_safety/widgets/home_widgets/live_safe/BustopCard.dart';
 import 'package:woman_safety/widgets/home_widgets/live_safe/HospitalCard.dart';
 import 'package:woman_safety/widgets/home_widgets/live_safe/PharmeccuCard.dart';
@@ -6,6 +8,19 @@ import 'package:woman_safety/widgets/home_widgets/live_safe/PoliceStationCard.da
 
 class LiveSafe extends StatelessWidget {
   const LiveSafe({super.key});
+
+  static Future<void> openMap(String location) async {
+    String googleUrl = 'https://www.google.com/maps/search/$location';
+
+    final Uri _url = Uri.parse(googleUrl);
+
+    try {
+      await launchUrl(_url);
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg: "Something went wrong! Call emergency number");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +31,21 @@ class LiveSafe extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         children: [
-          PoliceStationCard(),
-          HospitalCard(),
-          PharmeccuCard(),
-          Bustopcard(),
+          PoliceStationCard(
+            onMapfunction: openMap,
+          ),
+          SizedBox(width: 20),
+          HospitalCard(
+            onMapfunction: openMap,
+          ),
+          SizedBox(width: 20),
+          PharmeccuCard(
+            onMapfunction: openMap,
+          ),
+          SizedBox(width: 20),
+          Bustopcard(
+            onMapfunction: openMap,
+          ),
         ],
       ),
     );
