@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:woman_safety/utils/quetos.dart';
 import 'package:woman_safety/widgets/home_widgets/Emergency_card.dart';
+import 'package:woman_safety/widgets/home_widgets/SafeHome/SafeHome.dart';
 import 'package:woman_safety/widgets/home_widgets/customCarouel.dart';
 import 'package:woman_safety/widgets/home_widgets/custom_appbar.dart';
 import 'package:woman_safety/widgets/home_widgets/live_safe.dart';
@@ -70,6 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   LiveSafe(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SafeHome(),
                 ],
               ),
             ),
