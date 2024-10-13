@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "755863108720",
+    "project_id": "safecircle-8e2bd",
+    "storage_bucket": "safecircle-8e2bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755863108720:android:20b14f4e524d16600548b5",
+        "android_client_info": {
+          "package_name": "com.example.woman_safety"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJJa0h_ZrAyxfPO5rbuDJMBJHHl1ijM8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
