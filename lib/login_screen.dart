@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:woman_safety/components/custom_textfield.dart';
 import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
+import 'package:woman_safety/db/shared_pref.dart';
 
 import 'package:woman_safety/home_screen.dart';
 import 'package:woman_safety/parent/parent_homescreen.dart';
@@ -54,9 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
         if (userDoc.exists) {
           final userType = userDoc.data()?['type'] as String?;
           if (userType == 'parent') {
+            SharedPref.saveUserType('parent');
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const ParentHomescreen()));
           } else if (userType == 'child') {
+            SharedPref.saveUserType('child');
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) =>HomeScreen()));
           } else {

@@ -38,7 +38,7 @@ class _ParentRegistrationScreenState extends State<ParentLoginScreen> {
     }
 
     // If all validations pass, show progress bar and proceed with registration
-    progress(context);
+    Progress();
     _registerUser();
   }
 

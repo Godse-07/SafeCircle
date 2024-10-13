@@ -36,7 +36,7 @@ class _RegisterChildState extends State<RegisterChild> {
     }
 
     // If everything is correct, show progress bar and register the user
-    progress(context);
+    Progress();
     _registerUser();
   }
 
