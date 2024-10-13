@@ -3,6 +3,7 @@ import 'package:woman_safety/components/custom_textfield.dart';
 import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
 import 'package:woman_safety/login_screen.dart';
+import 'package:woman_safety/constant.dart';
 
 class ParentLoginScreen extends StatefulWidget {
   const ParentLoginScreen({super.key});
@@ -21,6 +22,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
 
   void _onSubmit() {
     _formKey.currentState!.save();
+    progress(context);
     print(_formData);
   }
 
@@ -182,7 +184,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                           return null;
                         },
                         onsave: (password) {
-                          _formData['password'] = password ?? "";
+                          _formData['rpassword'] = password ?? "";
                         },
                       ),
                       SizedBox(

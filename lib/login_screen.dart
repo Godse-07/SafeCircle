@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:woman_safety/components/custom_textfield.dart';
 import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
+import 'package:woman_safety/constant.dart';
 import 'package:woman_safety/registed_parent.dart';
 import 'package:woman_safety/register_child.dart';
 
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.only(top: 15),
                   child: Center(
                     child: Text(
-                      "Login",
+                      "User Login",
                       style: TextStyle(
                         fontSize: 34,
                         fontWeight: FontWeight.bold,
@@ -109,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (_formKey.currentState!.validate()) {
                               _onSubmit();
                             }
+                            progress(context);
                           },
                         ),
                       ],

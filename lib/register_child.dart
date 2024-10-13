@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:woman_safety/components/custom_textfield.dart';
 import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
+import 'package:woman_safety/constant.dart';
 import 'package:woman_safety/login_screen.dart';
 
 class RegisterChild extends StatefulWidget {
@@ -18,7 +20,48 @@ class _RegisterChildState extends State<RegisterChild> {
 
   void _onSubmit() {
     _formKey.currentState!.save();
+    if (_formData['password'] != _formData['rpassword']) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Password does not match"),
+      ));
+      return;
+    } else {
+      progress(context);
+      try {
+        FirebaseAuth auth = FirebaseAuth.instance;
+        auth
+            .createUserWithEmailAndPassword(
+                email: _formData['email'].toString(),
+                password: _formData['password'].toString())
+            .whenComplete(() => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LoginScreen())));
+      } on FirebaseAuthException catch (e) {
+        _dialogueBox(context, e.message.toString());
+      } catch (e) {
+        print(e.toString());
+      }
+    }
     print(_formData);
+  }
+
+  void _dialogueBox(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -179,7 +222,7 @@ class _RegisterChildState extends State<RegisterChild> {
                           return null;
                         },
                         onsave: (password) {
-                          _formData['password'] = password ?? "";
+                          _formData['rpassword'] = password ?? "";
                         },
                       ),
                       SizedBox(
