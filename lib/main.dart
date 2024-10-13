@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:woman_safety/child/bottom_page.dart';
 import 'package:woman_safety/constant.dart';
 import 'package:woman_safety/db/shared_pref.dart';
 import 'package:woman_safety/firebase_options.dart';
@@ -35,9 +36,8 @@ class MyApp extends StatelessWidget {
         home: FutureBuilder(
             future: SharedPref.getUserType(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              
               if (snapshot.data == "child") {
-                return HomeScreen();
+                return BottomPage();
               }
               if (snapshot.data == "parent") {
                 return ParentHomescreen();
