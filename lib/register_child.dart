@@ -15,36 +15,42 @@ class RegisterChild extends StatefulWidget {
 
 class _RegisterChildState extends State<RegisterChild> {
   bool isPasswordShown = true;
+  bool isRPasswordShown = true;
   final _formKey = GlobalKey<FormState>();
   final _formData = Map<String, Object>();
 
   void _onSubmit() async {
     _formKey.currentState!.save();
+
+    // Validate if the password and confirm password match
     if (_formData['password'] != _formData['rpassword']) {
       _showErrorDialog("Password does not match");
       return;
     }
-    
-    // Check if email already exists
+
+    // Check if the email already exists
     bool emailExists = await _checkEmailExists(_formData['email'].toString());
     if (emailExists) {
       _showErrorDialog("An account with this email already exists");
       return;
     }
-    
-    // If everything is correct, show progress bar and register user
+
+    // If everything is correct, show progress bar and register the user
     progress(context);
     _registerUser();
   }
 
   Future<bool> _checkEmailExists(String email) async {
     try {
-      // Using Firebase Auth to check if email exists
-      var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      // Using FirebaseAuth to check if email exists
+      var methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       return methods.isNotEmpty;
-    } catch (e) {
-      print("Error checking email existence: $e");
-      return false;
+    } on FirebaseAuthException catch (e) {
+      // Log the error for debugging purposes
+      print("Error checking email existence: ${e.message}");
+      _showErrorDialog("An error occurred while checking email existence.");
+      return false; // Default to false if an error occurs
     }
   }
 
@@ -228,16 +234,16 @@ class _RegisterChildState extends State<RegisterChild> {
                     SizedBox(height: 20),
                     CustomTextfield(
                       hintText: "Re-enter Password",
-                      isPassword: isPasswordShown,
+                      isPassword: isRPasswordShown,
                       prefix: Icon(Icons.password),
                       suffix: IconButton(
                         onPressed: () {
                           setState(() {
-                            isPasswordShown = !isPasswordShown;
+                            isRPasswordShown = !isRPasswordShown;
                           });
                         },
                         icon: Icon(
-                          isPasswordShown
+                          isRPasswordShown
                               ? Icons.visibility_off
                               : Icons.visibility,
                         ),

@@ -12,29 +12,32 @@ class ParentLoginScreen extends StatefulWidget {
   const ParentLoginScreen({super.key});
 
   @override
-  State<ParentLoginScreen> createState() => _ParentLoginScreenState();
+  State<ParentLoginScreen> createState() => _ParentRegistrationScreenState();
 }
 
-class _ParentLoginScreenState extends State<ParentLoginScreen> {
+class _ParentRegistrationScreenState extends State<ParentLoginScreen> {
   bool isPasswordShown = true;
+  bool isretypePasswordShown = true;
   final _formKey = GlobalKey<FormState>();
   final _formData = Map<String, Object>();
 
   void _onSubmit() async {
     _formKey.currentState!.save();
+
+    // Check if password and confirm password fields match
     if (_formData['password'] != _formData['rpassword']) {
       _showErrorDialog("Password does not match");
       return;
     }
-    
-    // Check if email already exists
+
+    // Check if the email already exists
     bool emailExists = await _checkEmailExists(_formData['email'].toString());
     if (emailExists) {
       _showErrorDialog("An account with this email already exists");
       return;
     }
-    
-    // If everything is correct, show progress bar and register user
+
+    // If all validations pass, show progress bar and proceed with registration
     progress(context);
     _registerUser();
   }
@@ -42,10 +45,12 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
   Future<bool> _checkEmailExists(String email) async {
     try {
       // Using Firebase Auth to check if email exists
-      var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      var methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       return methods.isNotEmpty;
     } catch (e) {
       print("Error checking email existence: $e");
+      _showErrorDialog("An error occurred while checking the email existence.");
       return false;
     }
   }
@@ -59,14 +64,15 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
       );
 
       if (userCredential.user != null) {
+        // Save parent information in Firestore
         DocumentReference<Map<String, dynamic>> db = FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid);
         final user = UserModel(
           name: _formData['name'].toString(),
           number: _formData['number'].toString(),
-          child_mail: _formData['cemail'].toString(),
           parent_email: _formData['email'].toString(),
+          child_mail: _formData['cemail'].toString(),
           id: userCredential.user!.uid,
         );
         await db.set(user.toJson()).whenComplete(() {
@@ -117,7 +123,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                 padding: EdgeInsets.only(top: 15),
                 child: Center(
                   child: Text(
-                    "Register as a parent",
+                    "Register as a Parent",
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
@@ -153,7 +159,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                     ),
                     SizedBox(height: 20),
                     CustomTextfield(
-                      hintText: "Enter phone",
+                      hintText: "Enter Phone",
                       prefix: Icon(Icons.phone),
                       validate: (number) {
                         if (number!.isEmpty || number.length < 10) {
@@ -169,7 +175,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                     ),
                     SizedBox(height: 20),
                     CustomTextfield(
-                      hintText: "Enter email",
+                      hintText: "Enter Email",
                       prefix: Icon(Icons.email_rounded),
                       validate: (email) {
                         if (email!.isEmpty || !email.contains("@")) {
@@ -185,11 +191,11 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                     ),
                     SizedBox(height: 20),
                     CustomTextfield(
-                      hintText: "Enter children's email",
+                      hintText: "Enter Child's Email",
                       prefix: Icon(Icons.email_rounded),
                       validate: (cemail) {
                         if (cemail!.isEmpty || !cemail.contains("@")) {
-                          return "Valid children's email is required";
+                          return "Valid child's email is required";
                         }
                         return null;
                       },
@@ -211,7 +217,9 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                           });
                         },
                         icon: Icon(
-                          isPasswordShown ? Icons.visibility_off : Icons.visibility,
+                          isPasswordShown
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                       ),
                       validate: (password) {
@@ -227,16 +235,18 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                     SizedBox(height: 20),
                     CustomTextfield(
                       hintText: "Re-enter Password",
-                      isPassword: isPasswordShown,
+                      isPassword: isretypePasswordShown,
                       prefix: Icon(Icons.password),
                       suffix: IconButton(
                         onPressed: () {
                           setState(() {
-                            isPasswordShown = !isPasswordShown;
+                            isretypePasswordShown = !isretypePasswordShown;
                           });
                         },
                         icon: Icon(
-                          isPasswordShown ? Icons.visibility_off : Icons.visibility,
+                          isretypePasswordShown
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                       ),
                       validate: (password) {
@@ -270,7 +280,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 },
-              )
+              ),
             ],
           ),
         ),
