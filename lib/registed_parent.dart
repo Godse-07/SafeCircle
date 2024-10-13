@@ -74,6 +74,7 @@ class _ParentRegistrationScreenState extends State<ParentLoginScreen> {
           parent_email: _formData['email'].toString(),
           child_mail: _formData['cemail'].toString(),
           id: userCredential.user!.uid,
+          type: "parent",
         );
         await db.set(user.toJson()).whenComplete(() {
           Navigator.of(context).pop(); // Dismiss progress dialog

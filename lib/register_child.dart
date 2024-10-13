@@ -72,6 +72,7 @@ class _RegisterChildState extends State<RegisterChild> {
           child_mail: _formData['email'].toString(),
           parent_email: _formData['gemail'].toString(),
           id: userCredential.user!.uid,
+          type: "child",
         );
         await db.set(user.toJson()).whenComplete(() {
           Navigator.of(context).pop(); // Dismiss progress dialog

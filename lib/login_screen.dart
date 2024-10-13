@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:woman_safety/components/custom_textfield.dart';
@@ -5,10 +6,13 @@ import 'package:woman_safety/components/primary_button.dart';
 import 'package:woman_safety/components/secondary_button.dart';
 
 import 'package:woman_safety/home_screen.dart';
+import 'package:woman_safety/parent/parent_homescreen.dart';
 import 'package:woman_safety/registed_parent.dart';
 import 'package:woman_safety/register_child.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -16,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isPasswordShown = true;
   final _formKey = GlobalKey<FormState>();
-  final _formData = Map<String, Object>();
+  final _formData = <String, String>{};
   bool isLoading = false;
 
   void _onSubmit() async {
@@ -32,35 +36,59 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-              email: _formData['email'] as String,
-              password: _formData['password'] as String);
-
-      setState(() {
-        isLoading = false;
-      });
+              email: _formData['email']!,
+              password: _formData['password']!);
 
       if (userCredential.user != null) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .get();
+
+        setState(() {
+          isLoading = false;
+        });
+
+        if (!mounted) return;
+
+        if (userDoc.exists) {
+          final userType = userDoc.data()?['type'] as String?;
+          if (userType == 'parent') {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const ParentHomescreen()));
+          } else if (userType == 'child') {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) =>HomeScreen()));
+          } else {
+            _showErrorDialog("Unknown user type");
+          }
+        } else {
+          _showErrorDialog("User document not found");
+        }
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
         isLoading = false;
       });
 
-      // Check for specific error codes
-      if (e.code == 'user-not-found') {
-        _showErrorDialog("No user found for that email.");
-      } else if (e.code == 'wrong-password') {
-        _showErrorDialog("The password does not match the provided email.");
-      } else if (e.code == 'invalid-email') {
-        _showErrorDialog("The email address is not valid.");
-      } else if (e.code == 'invalid-credential') {
-        _showErrorDialog(
-            "The provided credentials are incorrect. Please check your email and password.");
-      } else {
-        _showErrorDialog("An error occurred: ${e.message}");
+      String errorMessage;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = "No user found for that email.";
+          break;
+        case 'wrong-password':
+          errorMessage = "The password does not match the provided email.";
+          break;
+        case 'invalid-email':
+          errorMessage = "The email address is not valid.";
+          break;
+        case 'invalid-credential':
+          errorMessage = "The provided credentials are incorrect. Please check your email and password.";
+          break;
+        default:
+          errorMessage = "An error occurred: ${e.message}";
       }
+      _showErrorDialog(errorMessage);
     } catch (e) {
       setState(() {
         isLoading = false;
@@ -74,11 +102,11 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Error"),
+          title: const Text("Error"),
           content: Text(message),
           actions: [
             TextButton(
-              child: Text("OK"),
+              child: const Text("OK"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -98,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 15),
                   child: Text(
                     "User Login",
@@ -119,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       CustomTextfield(
                         hintText: "Enter email",
-                        prefix: Icon(Icons.person),
+                        prefix: const Icon(Icons.person),
                         validate: (email) {
                           if (email == null || email.isEmpty) {
                             return "Email is required";
@@ -135,11 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           _formData['email'] = email ?? "";
                         },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       CustomTextfield(
                         hintText: "Enter Password",
                         isPassword: isPasswordShown,
-                        prefix: Icon(Icons.password),
+                        prefix: const Icon(Icons.password),
                         suffix: IconButton(
                           onPressed: () {
                             setState(() {
@@ -165,9 +193,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           _formData['password'] = password ?? "";
                         },
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       isLoading
-                          ? CircularProgressIndicator()
+                          ? const CircularProgressIndicator()
                           : PrimaryButton(
                               title: "Login",
                               onPress: _onSubmit,
@@ -175,18 +203,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Forget Password?",
                       style: TextStyle(
                         fontSize: 18,
                         color: Color(0xFFD40061),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     SecondaryButton(
                       title: "Press here",
                       onPress: () {
@@ -196,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SecondaryButton(
                   title: "Create new account as a child",
                   onPress: () {
@@ -206,14 +234,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             builder: (context) => RegisterChild()));
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SecondaryButton(
                   title: "Create new account as a Parent",
                   onPress: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ParentLoginScreen()));
+                            builder: (context) => const ParentLoginScreen()));
                   },
                 ),
               ],
